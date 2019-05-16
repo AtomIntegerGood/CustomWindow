@@ -3,6 +3,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class Mainmenu {
     static Bounds bounds=new Bounds();
@@ -45,10 +48,12 @@ class TitleJpanel extends JPanel{
     Bounds size=new Bounds();
     ColseButton b1=new ColseButton();
     OptionButton b2=new OptionButton();
+    DateUp d=new DateUp();
     TitleJpanel(){
         setLayout(new FlowLayout(2,2,0));
         setPreferredSize(new Dimension(size.w,b1.Close1.getIconHeight()+5));
         setBackground(new Color(75,75,75));
+        add(d);
         add(b2);
         add(b1);
     }
@@ -126,3 +131,21 @@ class BodyJPanel extends JPanel{
         setBackground(new Color(200,200,200));
     }
 }
+/**
+ * 日期JPanel
+ */
+class DateUp extends JLabel{
+    ColseButton c=new ColseButton();
+    DateUp(){
+        setBackground(new Color(75,75,75));
+        setPreferredSize(new Dimension(100,c.Close1.getIconHeight()+5));
+        Calendar c = Calendar.getInstance();
+        DateFormat d=new SimpleDateFormat("HH:mm:ss");
+        String s=d.format(c.getTime());
+        setText(s);
+    }
+}
+/**
+注：自己带img文件，代码不完善button长按会出现被选中凹陷状态 其次日期未加入线程持续更新 option 按钮功能未添加
+后续添加首次登陆设置选项和注册选项和config本地文件
+*/
