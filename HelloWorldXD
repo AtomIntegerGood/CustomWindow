@@ -1,0 +1,269 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class AMainRun {
+    static Bounds bounds=new Bounds();
+    static JFrame noWindowsFrame=new NoWindowsFrame();
+    static JPanel titleJpanel=new TitleJpanel();
+    static JPanel BodyJpanel=new BodyJPanel();
+    public static void main(String[] args) {
+        noWindowsFrame.add(titleJpanel);
+        noWindowsFrame.add(BodyJpanel);
+        noWindowsFrame.setBounds(bounds.x,bounds.y,bounds.w,bounds.h);
+        noWindowsFrame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                System.out.println(e);
+            }
+        });
+    }
+}
+/**
+ * 无边窗口模式
+ */
+class NoWindowsFrame extends JFrame{
+    NoWindowsFrame(){
+        setUndecorated(true);
+        setVisible(true);
+        setLayout(new FlowLayout(2,0,0));
+    }
+}
+/**
+ *分辨率相关
+ */
+class Bounds{
+    Dimension Screen=Toolkit.getDefaultToolkit().getScreenSize();
+    int Sx= (int) Screen.getWidth();
+    int Sy= (int) Screen.getHeight();
+    int w=800;
+    int h=600;
+    int x=Sx/2-w/2;
+    int y=Sy/2-h/2;
+}
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * 身体窗口
+ */
+class BodyJPanel extends JPanel{
+    Bounds b=new Bounds();
+    TitleJpanel titleJpanel=new TitleJpanel();
+    JLabel j=new JLabel();
+    BodyJPanel(){
+        setPreferredSize(new Dimension(b.w,b.h-titleJpanel.getHeight()));
+        setBackground(new Color(200,200,200));
+        j.setText("HelloWorld   XD!!");
+        add(j);
+    }
+}import java.awt.*;
+
+class Colors {
+    int R(int Red){
+        if (Red>255){
+            Red=255;
+        }
+        if (Red<0){
+            Red=0;
+        }
+        return Red;
+    }
+    int G(int Green){
+        if (Green>255){
+            Green=255;
+        }
+        if (Green<0){
+            Green=0;
+        }
+        return Green;
+    }
+    int B(int Bule){
+        if (Bule>255){
+            Bule=255;
+        }
+        if (Bule<0){
+            Bule=0;
+        }
+        return Bule;
+    }
+    Color LightGray=new Color(75,75,75);
+    Color Crimson=new Color(138,0,50);
+    Color Scarlet=new Color(220,20,60);
+    Color PaleLight=new Color(180,180,180);
+    Color While=new Color(255,255,255);
+    Color BrightYellow=new Color(255,153,60);
+}
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 无边窗口标题
+ */
+class TitleJpanel extends JPanel{
+    Colors c=new Colors();
+    Bounds size=new Bounds();
+    ColseButton b1=new ColseButton();
+    OptionButton b2=new OptionButton();
+    DateUp d=new DateUp();
+    TitleJpanel(){
+        setLayout(new FlowLayout(2,2,0));
+        setPreferredSize(new Dimension(size.w,b1.Close1.getIconHeight()+5));
+        setBackground(c.LightGray);
+        new Thread(()->d.run(),"timeThread").start();
+        add(d);
+        add(b2);
+        add(b1);
+    }
+}
+/**
+ * 关闭按钮
+ */
+class ColseButton extends JButton {
+    ImageIcon Close1=new ImageIcon("icon/Close1.png");
+    Colors c=new Colors();
+    ColseButton(){
+        setBorder(new EmptyBorder(0,0,0,0));
+        setIcon(Close1);
+        setBackground(c.Crimson);
+        setEnabled(false);
+        setPreferredSize(new Dimension(Close1.getIconWidth(),Close1.getIconHeight()));
+        addMouseListener(new MouseAdapter() {
+            byte i=0;
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getButton()==1) {
+                    System.exit(0);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if(i==1&&e.getButton()==1) {
+                    System.exit(0);
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                i=1;
+                setBackground(c.Scarlet);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                i=2;
+                setBackground(c.Crimson);
+            }
+        });
+    }
+}
+
+/**
+ * 选项按钮
+ */
+class OptionButton extends JButton implements Runnable{
+    Colors c=new Colors();
+    ImageIcon Option1=new ImageIcon("icon/Option1.png");
+    int i=4;
+    static byte e1=0;
+    Thread a=null;
+    OptionButton(){
+        setBorder(new EmptyBorder(0,0,0,0));
+        setIcon(Option1);
+        setBackground(c.PaleLight);
+        setEnabled(false);
+        setPreferredSize(new Dimension(Option1.getIconWidth(),Option1.getIconHeight()));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                switch (e.getButton()){
+                    case 1:break;
+                    case 3:if (e1>10){
+                        a=new Thread(()->run(),"OptionButton");
+                        q=true;
+                        a.start();
+                        e1=0;
+                    }else {
+                        q=false;
+                    }break;
+                    default:break;
+                }
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setBackground(c.BrightYellow);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e1++;
+                setBackground(c.PaleLight);
+            }
+        });
+    }
+    volatile boolean q=true;
+    public void run(){
+        ArrayList s=new ArrayList();
+        for (i=0;i<=4;i++) s.add(new ImageIcon("icon/Option/"+i+".png"));
+        while(q){
+            i--;
+            if (i==-1){
+                i=4;
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            setIcon((Icon) s.get(i));
+        }
+        setIcon(Option1);
+    }
+}
+
+/**
+ * 日期JPanel
+ */
+class DateUp extends JLabel implements Runnable{
+    ColseButton e=new ColseButton();
+    Colors c=new Colors();
+    DateUp(){
+        setBackground(c.LightGray);
+        setPreferredSize(new Dimension(100,e.Close1.getIconHeight()+5));
+    }
+    public void run(){
+        while (true) {
+            String s;
+            Calendar cg=Calendar.getInstance();
+            DateFormat d=new SimpleDateFormat("HH:mm:ss");
+            s = d.format(cg.getTime());
+            setText(s);
+            try {
+                TimeUnit.MILLISECONDS.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
